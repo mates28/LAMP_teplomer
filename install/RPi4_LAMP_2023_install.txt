@@ -1,0 +1,92 @@
+Install LAMP server on RPi4 - Raspbian Bullseye September 22nd 2022
+(show active monitors: "xrandr" duplicate monitors: "xrandr --output HDMI-1 --same-as HDMI-2")
+
+1. install Raspbian (version Bullseye September 22nd 2022)
+	- RPi imager (config SSH, WiFi atd.)
+	After start connet on SSH (SSH author problem in windows - Win+E, %USERPROFILE%, .ssh, known_hosts edit with notepad and delete saved SSH IP address)
+	- sudo apt update
+	- sudo apt upgrade
+
+2. install APACHE2
+	- sudo apt install apache2
+	After install set permissions to PI user for write /var/www/html/
+	- sudo chown -R pi:www-data /var/www/html/
+	- sudo chmod -R 770 /var/www/html/
+	Test installed Apache 2 on web browser
+	- http://<RASPBERRY IP> (IP adress show - ip a)
+
+3. install PHP
+	- sudo apt install php libapache2-mod-php
+	test installed PHP on web browser
+	- cd /var/www/html
+	- nano test.php (sudo)
+	- <?php phpinfo(); ?>
+	CTRL+X and Y and ENTER
+	- http://<RASPBERRY IP>/test.php (IP adress show - ip a)
+
+4. install MySQL with PHP code (MariaDB)
+	- sudo apt install mariadb-server php-mysql
+	restart Appache 2 after install
+	- sudo service apache2 restart
+
+	create test BD and user
+	- sudo mysql
+	-> CREATE DATABASE test;
+	-> CREATE USER 'webuser' IDENTIFIED BY 'password'; (change 'password' to your pass)
+	-> GRANT ALL PRIVILEGES ON test.* To 'webuser'@'localhost' IDENTIFIED BY 'password';  (change 'password' to your pass)
+	-> FLUSH PRIVILEGES;
+	-> quit
+
+	create your first table in DB
+	- mysql -uwebuser -ppassword test (change 'password' to your pass)
+	-> CREATE TABLE IF NOT EXISTS test (line_id INT AUTO_INCREMENT PRIMARY KEY, data VARCHAR(255) NOT NULL);
+	-> INSERT INTO test (data) VALUES ("Toto je testovací obsah, zapsaný do mojí DB");
+	-> quit
+
+	create PHP app with connect to my DB table
+	- cd /var/www/html
+	- nano test-mysql.php (sudo)
+	- <?php
+		$link = mysqli_connect("localhost", "webuser", "password", "test"); (change 'password' to your pass)
+		if ($link) {
+			$query = mysqli_query($link, "SELECT * FROM test");
+			while($array = mysqli_fetch_array($query)) {
+				echo $array['data']."<br />";
+			}
+		} else {
+			echo "MySQL error :".mysqli_error();
+		}
+	  ?>
+	CTRL+X and Y and ENTER
+	- http://<RASPBERRY IP>/test-mysql.php (IP adress show - ip a)
+
+5. install (optional) PHPMyAdmin (PHP wisiwig manager for DB)
+	- sudo apt install phpmyadmin
+	select 'apache2' with space, TAB and ENTER (OK)
+	select config dbconfig-common to 'NO' and ENTER
+	- sudo nano /etc/apache2/apache2.conf
+		Include /etc/phpmyadmin/apache.conf (this include end of file)
+	- sudo service apache2 restart
+	After install update Privileg for ROOT on PHPMyAdmin
+	- sudo mysql
+	-> DROP USER 'root'@'localhost';
+	-> CREATE USER 'root'@'localhost' IDENTIFIED BY 'password'; (change 'password' to your pass)
+	-> GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost';
+	-> ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password USING PASSWORD('password'); (change 'password' to your pass)
+	-> FLUSH PRIVILEGES;
+	-> quit
+
+	- http://<RASPBERRY IP>/phpmyadmin (IP adress show - ip a)
+
+6. custom commands to manage DB 
+	- sudo service mysql stop
+	- sudo mysqld_safe --skip-grant-tables
+	- sudo service mysql start
+	- sudo mysql -u root
+	-> use mysql;
+	-> show tables;
+	-> describe user;
+	-> update user set authentication_string=password('1111') where user='root';
+	-> FLUSH PRIVILEGES;
+	
+  
