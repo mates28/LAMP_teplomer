@@ -1,0 +1,52 @@
+body {
+    background-image: linear-gradient(#aaa 25%, #aaa);
+}
+
+h1, table {
+    text-align: center;
+}
+
+table {
+    border: none;
+    border-collapse: collapse;
+    width: 80%;
+    margin: 2rem auto 5rem;
+}
+
+th, td {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+}
+
+tr {
+    background: hsl(50, 50%, 80%); 
+}
+
+tr, td {
+    transition: .2s ease-in;
+} 
+
+tr:first-child {
+    background: hsla(236, 100%, 17%, 0.5);
+    color: ivory;
+}
+
+tr:nth-child(even) {
+    background: hsla(50, 50%, 80%, 0.7);
+}
+
+td:empty {
+    background: hsla(50, 25%, 60%, 0.7);
+}
+
+tr:hover:not(#firstrow), tr:hover td:empty {
+    background: rgb(136, 149, 219); 
+    pointer-events: visible;
+}
+
+tr:hover:not(#firstrow) {
+    transform: scale(1.08); 
+    font-weight: 500;
+    color: ivory;
+    box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.5);
+}
