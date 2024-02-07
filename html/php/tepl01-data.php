@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>RPi - Teploměr 01</title>
+    <title>RPi - Teploměr 06</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" >
@@ -30,10 +30,9 @@
   <body>
   <?php
   $servername = "localhost";
-
-  $dbname = "teplomer_01_data";
-  $username = "writer";
-  $password = "Wrt20SQL20";
+  $dbname = "teplomer";
+  $username = "webuser";
+  $password = "Lamp2024";
 
   $conn = new mysqli($servername, $username, $password, $dbname);
   if ($conn->connect_error) {
