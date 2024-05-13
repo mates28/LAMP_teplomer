@@ -87,7 +87,11 @@ while True:
         print("Nadm. výška:", data['nadm_vyska'], "m")
         # zobrazeni dat na TFT
         display.set_pen(WHITE)
-        display.text("Teplomer 01 - data", 20, 20, 300, 2)
+        display.text("Teplomer 05 - data", 20, 20, 300, 3)
+        display.text("Teplota: "+str(data['teplota'])+" °C", 50, 60, 300, 2)
+        display.text("Vlhkost: "+str(data['vlhkost'])+" %", 50, 90, 300, 2)
+        display.text("Atm. tlak: "+str(data['atm_tlak'])+" hPa", 50, 120, 300, 2)
+        display.text("Nadm. vyska: "+str(data['nadm_vyska'])+" m", 50, 150, 300, 2)
         # ...
         display.update()
         #
